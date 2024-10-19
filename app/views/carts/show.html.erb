@@ -1,0 +1,33 @@
+<h1>Your Cart</h1>
+
+<form id="cart-form" action="<%= cart_path %>" method="post">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cart.line_items.each do |item| %>
+        <tr>
+          <td><%= item.product.name %></td>
+          <td>
+            <input type="number" id="quantity-input" value="<%= item.quantity %>" min="1" data-product-id="<%= item.product.id %>">
+            <span class="error-message" style="color:red; display:none;">Invalid quantity!</span>
+          </td>
+          <td>$<%= item.product.price * item.quantity %></td>
+          <td>
+            <%= link_to 'Remove', line_items_path(item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h3>Total: $<%= @cart.line_items.sum { |item| item.product.price * item.quantity } %></h3>
+
+  <button type="button" id="submit-cart" class="btn btn-primary">Submit Cart</button>
+</form>
